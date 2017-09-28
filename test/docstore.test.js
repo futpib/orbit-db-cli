@@ -16,9 +16,9 @@ describe('OrbitDB CLI - Document Database', function () {
   before(() => {
     // Make sure we don't have an existing database
     rmrf.sync('./orbitdb')
-    CLI(`create ${dbname} docstore`)
     id = getId()
-    databaseAddress = OrbitDB.parseAddress(path.join('/', id, dbname))
+    const  result = CLI(`create ${dbname} docstore`)
+    databaseAddress = result.toString().replace('\n', '')
   })
 
   after(() => {

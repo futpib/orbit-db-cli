@@ -21,18 +21,25 @@ const openDatabase = async (database, argv, openAsType) => {
 
   const ipfs = await startIpfs(ipfsConfig)
   const peerId = await ipfs.config.get('Identity.PeerID')
-  const orbitdb = new OrbitDB(ipfs)
   const directory = process.env.ORBITDB_PATH || config.defaultDatabaseDir
+  const orbitdb = new OrbitDB(ipfs, directory)
 
   logger.debug(`Loading database '${database}'`)
 
-  const db = await orbitdb.load(database, directory, {
-    maxHistory: -1,
-    indexBy: argv.indexBy,
-    replicate: live || false,
-    type: openAsType,
-    create: openAsType ? true : false,
-  })
+  let db
+  try {
+    db = await orbitdb.open(database, directory, {
+      maxHistory: -1,
+      indexBy: argv.indexBy,
+      replicate: live || false,
+      type: openAsType,
+      create: openAsType ? true : false,
+      key: argv.key,
+      sync: replicate,
+    })
+  } catch (e) {
+    console.log(e)
+  }
 
   if (!db)
     throw new Error(`Database '${database}' doesn't exist.`)

@@ -21,7 +21,8 @@ describe('OrbitDB CLI - Counter Database', function () {
     rmrf.sync('./orbitdb')
     id = getId()
     databaseAddress = OrbitDB.parseAddress(path.join('/', id, dbname))
-    CLI(`create ${dbname} counter`)
+    const result = CLI(`create ${dbname} counter`)
+    databaseAddress = result.toString().replace('\n', '')
   })
 
   after(() => {

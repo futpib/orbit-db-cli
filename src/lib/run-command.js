@@ -63,11 +63,15 @@ const runCommand = async (database, validTypes, argv, operation, onError) => {
       const waitForInput = (prompt) => new Promise((resolve) => rl.question(prompt, resolve))
       const queryLoop = async () => {
         const text = await waitForInput('> ')
-        // if (text) {
-          // argv.data = !text || text === '' ? '' : text // uncomment for ipfs-cached content (ie. no network delay)
-          argv.data = !text || text === '' ? new Date().getTime().toString() : text
-          await operation(db, argv)
-        // }
+          try {
+          // if (text) {
+            // argv.data = !text || text === '' ? '' : text // uncomment for ipfs-cached content (ie. no network delay)
+            argv.data = (!text || text === '') ? new Date().getTime().toString() : text
+            await operation(db, argv)
+          // }
+          } catch (e) {
+            console.log(e.toString())
+          }
       }
 
       if (argv.interactive) {
@@ -75,6 +79,7 @@ const runCommand = async (database, validTypes, argv, operation, onError) => {
         process.stdout.write('Press CTRL+C twice to exit the program\n')
         replicate(db, argv)
         return pWhilst(() => true, queryLoop)
+          .catch(e => console.log(e))
       } else if (argv.interval) {
         // Update database at an interval
         let running = false
