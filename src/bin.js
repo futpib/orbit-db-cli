@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 'use strict'
 
+require('make-promises-safe') // installs an 'unhandledRejection' handler
 const argv = require('yargs')
 const logo = require('./logo')
 

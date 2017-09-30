@@ -10,7 +10,7 @@ const config = require('../config')
 const startIpfs = require('../start-ipfs.js')
 const hookProgressOutput = require('../hook-output-progress')
 
-const openDatabase = async (database, argv, openAsType) => {
+const openDatabase = async (database, argv = { _: [] }, openAsType) => {
   const replicate = argv.replicate || argv.sync || argv._.includes('replicate')
   const live = replicate || argv.interactive ? true : false
   // TODO: add database path config: { repo: path.join('./.orbitdb') }
